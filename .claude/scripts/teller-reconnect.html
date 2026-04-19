@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Teller Reconnect — Your Bank</title>
+  <style>
+    body { font-family: monospace; padding: 40px; background: #0f0f0f; color: #e0e0e0; }
+    button { padding: 14px 28px; font-size: 16px; background: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer; }
+    button:hover { background: #1d4ed8; }
+    pre { background: #1a1a1a; padding: 20px; border-radius: 6px; border: 1px solid #333; margin-top: 24px; white-space: pre-wrap; word-break: break-all; }
+    .token { color: #4ade80; font-size: 18px; font-weight: bold; }
+    .label { color: #94a3b8; font-size: 12px; margin-bottom: 4px; }
+  </style>
+</head>
+<body>
+  <h2>Teller Connect — Re-link Your Bank</h2>
+  <p>Click the button, log into Your Bank, and your new access token will appear below.</p>
+  <button onclick="tellerConnect.open()">Connect Your Bank</button>
+
+  <div id="result" style="display:none; margin-top:24px;">
+    <div class="label">NEW ACCESS TOKEN — copy this into .claude/scripts/.env</div>
+    <div class="token" id="token-display"></div>
+    <div class="label" style="margin-top:16px;">Full enrollment object:</div>
+    <pre id="json-display"></pre>
+  </div>
+
+  <script src="https://cdn.teller.io/connect/connect.js"></script>
+  <script>
+    var tellerConnect = TellerConnect.setup({
+      applicationId: "app_ppt6un2tfdhatutgj8000",
+      onSuccess: function(enrollment) {
+        document.getElementById("result").style.display = "block";
+        document.getElementById("token-display").textContent = enrollment.accessToken;
+        document.getElementById("json-display").textContent = JSON.stringify(enrollment, null, 2);
+        console.log("SUCCESS — new access token:", enrollment.accessToken);
+      },
+      onExit: function() {
+        console.log("Teller Connect closed");
+      }
+    });
+  </script>
+</body>
+</html>
