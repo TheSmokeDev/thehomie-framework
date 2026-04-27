@@ -1,11 +1,11 @@
 ---
 name: vault-sync
-description: "Sync completed work into the active coding vault and project memory. Reads a PRD, plan, or completion summary, then updates vault CLAUDE.md with feature documentation and MEMORY.md with implementation status. Use PROACTIVELY after completing any PRD phase, major feature, or project milestone - even if the user just says 'document this', 'update the vault', 'capture what we built', or 'record this completion'. Also triggers on: sync vault, update memory, log this work, mark as complete."
+description: "Sync completed work into the active coding vault and project memory. Reads a PRD, plan, or completion summary, then updates vault CLAUDE.md with feature documentation and MEMORY.md with implementation status. Use PROACTIVELY after completing any PRD phase, major feature, or project milestone — even if the user just says 'document this', 'update the vault', 'capture what we built', or 'record this completion'. Also triggers on: sync vault, update memory, log this work, mark as complete."
 ---
 
 # /vault-sync — Document Completed Work
 
-Reads a source document (PRD, plan, session summary) and updates the active coding vault's CLAUDE.md and project MEMORY.md with what was built, when, and key stats.
+Reads a source document (PRD, plan, session summary) and updates the coding vault's CLAUDE.md and project MEMORY.md with what was built, when, and key stats.
 
 ## Usage
 
@@ -24,12 +24,12 @@ Resolve the documentation targets in this order:
    - `THEHOMIE_VAULT_CLAUDE_PATH`
    - `THEHOMIE_PROJECT_MEMORY_PATH`
    - `THEHOMIE_VAULT_VALIDATOR`
-3. Repo defaults for thehomie work:
-   - **Vault CLAUDE.md**: `C:\Users\YourUser\coding-vault\CLAUDE.md`
-   - **Project MEMORY.md**: `C:\Users\YourUser\.claude\projects\C--Users-YourUser-thehomie\memory\MEMORY.md`
-   - **Vault validator**: `python "~/.claude/skills/vault/scripts/vault.py" validate`
+3. Detect from current working directory:
+   - **Vault CLAUDE.md**: Look for `CLAUDE.md` in the repo root or parent coding vault
+   - **Project MEMORY.md**: `~/.claude/projects/{encoded-cwd}/memory/MEMORY.md`
+   - **Vault validator**: `vault.py validate` if present in the vault's skill scripts
 
-If the work belongs to another deployment-specific repo, use that deployment's project memory path instead of the thehomie default.
+If the work belongs to a specific deployment repo, use that repo's project memory path.
 
 ## Workflow
 
@@ -47,8 +47,8 @@ Extract from the source:
 ### Step 2: Read Current State
 
 Read both target files in parallel:
-- Resolved vault CLAUDE.md - understand existing sections, tables, lists
-- Resolved project MEMORY.md - find "Implementation Status" section, note current line count
+- Vault CLAUDE.md — understand existing sections, tables, lists
+- Project MEMORY.md — find "Implementation Status" section, note current line count
 
 ### Step 3: Plan Updates
 
