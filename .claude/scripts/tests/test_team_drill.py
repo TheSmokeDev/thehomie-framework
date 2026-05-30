@@ -12,8 +12,12 @@ if str(_SCRIPTS_DIR) not in sys.path:
 
 from orchestration.db import OrchestrationDB  # noqa: E402
 from orchestration.mailbox_service import MailboxService  # noqa: E402
-from orchestration.team_drill import TaskChadTeamDrillService  # noqa: E402
+from orchestration.team_drill import (  # noqa: E402
+    TaskChadTeamDrillService,
+    taskchad_drill_result_to_dict,
+)
 from orchestration.team_service import TeamService  # noqa: E402
+from runtime.base import RuntimeResult  # noqa: E402
 
 
 def test_taskchad_drill_runs_role_review_and_final_plan():
@@ -51,6 +55,65 @@ def test_taskchad_drill_runs_role_review_and_final_plan():
         assert any("Adversarial review" in body for body in bodies)
         assert any("Sales revision" in body for body in bodies)
         assert any("Final revised TaskChad plan" in body for body in bodies)
+    finally:
+        db.close()
+
+
+def test_taskchad_runtime_drill_runs_no_tools_and_sanitizes_metadata(monkeypatch):
+    calls = []
+
+    async def fake_run_with_runtime_lanes(request):
+        calls.append(request)
+        return RuntimeResult(
+            text=f"Runtime drill turn {len(calls)}",
+            runtime_lane=request.runtime_lane or "generic_runtime",
+            provider="openai-codex",
+            model="gpt-test",
+            profile_key="primary-openai-codex",
+            session_id=f"runtime-session-{len(calls)}",
+            cost_usd=0.01,
+            tool_call_count=0,
+        )
+
+    monkeypatch.setattr(
+        "orchestration.team_loop.run_with_runtime_lanes",
+        fake_run_with_runtime_lanes,
+    )
+    db = OrchestrationDB(":memory:")
+    try:
+        result = TaskChadTeamDrillService(db).run_taskchad_drill(
+            use_runtime=True,
+            runtime_lane="generic_runtime",
+        )
+        payload = taskchad_drill_result_to_dict(result)
+
+        assert len(calls) == 10
+        assert all(call.task_name == "team_loop_member_turn" for call in calls)
+        assert all(call.runtime_lane == "generic_runtime" for call in calls)
+        assert all(call.allowed_tools == [] for call in calls)
+        assert all(call.disallowed_tools == ["*"] for call in calls)
+        assert all(call.max_turns == 1 for call in calls)
+        assert result.convoy.convoy.completed_subtasks == 10
+        assert result.final_plan == "Runtime drill turn 10"
+
+        assert payload["runtime"]["enabled"] is True
+        assert payload["runtime"]["turn_count"] == 10
+        assert payload["runtime"]["lanes"] == ["generic_runtime"]
+        assert payload["runtime"]["providers"] == ["openai-codex"]
+        assert payload["runtime"]["models"] == ["gpt-test"]
+        assert payload["runtime"]["tool_call_count"] == 0
+        assert payload["runtime"]["cost_usd"] == 0.1
+        assert isinstance(payload["runtime"]["execution_time_ms"], int)
+        assert payload["role_turns"][0]["runtime"]["provider"] == "openai-codex"
+        assert payload["role_turns"][0]["runtime"]["cost_usd"] == 0.01
+        assert "session_id" not in payload["role_turns"][0]["runtime"]
+        assert "session_id" not in payload["role_turns"][0]["step"]["runtime"]
+        assert payload["role_turns"][0]["step"]["claimed"] == []
+        assert all(
+            subtask["description"] == ""
+            for subtask in payload["convoy"]["subtasks"]
+        )
+        assert "Runtime drill turn 10" in payload["final_plan"]
     finally:
         db.close()
 

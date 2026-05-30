@@ -680,6 +680,7 @@ class TaskChadTeamDrillService:
 
 
 def taskchad_drill_turn_to_dict(turn: TaskChadDrillTurn) -> dict:
+    step = _taskchad_safe_step_dict(turn.step)
     return {
         "role": turn.role.key,
         "role_name": turn.role.agent_name,
@@ -689,7 +690,96 @@ def taskchad_drill_turn_to_dict(turn: TaskChadDrillTurn) -> dict:
         "status": turn.step.subtask_after.status if turn.step.subtask_after else None,
         "completed": turn.step.completed,
         "reply": dataclasses.asdict(turn.step.reply) if turn.step.reply else None,
-        "step": result_to_dict(turn.step),
+        "runtime": taskchad_runtime_metadata_for_step(turn.step),
+        "step": step,
+    }
+
+
+def taskchad_runtime_metadata_for_step(step: TeamLoopStepResult) -> dict | None:
+    if step.runtime is None:
+        return None
+    return {
+        "runtime_lane": step.runtime.runtime_lane,
+        "provider": step.runtime.provider,
+        "model": step.runtime.model,
+        "profile_key": step.runtime.profile_key,
+        "cost_usd": step.runtime.cost_usd,
+        "execution_time_ms": step.runtime_execution_time_ms,
+        "tool_call_count": step.runtime.tool_call_count,
+        "error": step.runtime_error,
+    }
+
+
+def _taskchad_safe_step_dict(step: TeamLoopStepResult) -> dict:
+    data = result_to_dict(step)
+    data["claimed"] = []
+    runtime = data.get("runtime")
+    if isinstance(runtime, dict):
+        runtime.pop("session_id", None)
+    for key in ("subtask_before", "subtask_after"):
+        subtask = data.get(key)
+        if isinstance(subtask, dict):
+            subtask["description"] = ""
+    newly_ready = data.get("newly_ready")
+    if isinstance(newly_ready, list):
+        for subtask in newly_ready:
+            if isinstance(subtask, dict):
+                subtask["description"] = ""
+    return data
+
+
+def _taskchad_safe_subtask_dict(subtask: Subtask) -> dict:
+    data = dataclasses.asdict(subtask)
+    data["description"] = ""
+    return data
+
+
+def taskchad_drill_runtime_summary(result: TaskChadDrillResult) -> dict:
+    turns = [
+        *result.role_turns,
+        result.reviewer_turn,
+        *result.revision_turns,
+        result.final_turn,
+    ]
+    runtime_turns = [turn for turn in turns if turn.step.runtime is not None]
+    metadata = [
+        taskchad_runtime_metadata_for_step(turn.step)
+        for turn in runtime_turns
+    ]
+    present = [item for item in metadata if item is not None]
+    costs = [
+        item["cost_usd"]
+        for item in present
+        if isinstance(item.get("cost_usd"), (int, float))
+    ]
+    elapsed = [
+        item["execution_time_ms"]
+        for item in present
+        if isinstance(item.get("execution_time_ms"), int)
+    ]
+    errors = [
+        str(item["error"])
+        for item in present
+        if item.get("error")
+    ]
+    return {
+        "enabled": bool(runtime_turns),
+        "turn_count": len(runtime_turns),
+        "lanes": sorted(
+            {str(item["runtime_lane"]) for item in present if item.get("runtime_lane")}
+        ),
+        "providers": sorted(
+            {str(item["provider"]) for item in present if item.get("provider")}
+        ),
+        "models": sorted(
+            {str(item["model"]) for item in present if item.get("model")}
+        ),
+        "tool_call_count": sum(
+            int(item.get("tool_call_count") or 0) for item in present
+        ),
+        "cost_usd": round(sum(costs), 6) if costs else (0.0 if runtime_turns else None),
+        "execution_time_ms": sum(elapsed) if elapsed else (0 if runtime_turns else None),
+        "errors": errors,
     }
 
 
@@ -698,13 +788,17 @@ def taskchad_drill_result_to_dict(result: TaskChadDrillResult) -> dict:
         "target_url": result.target_url,
         "team_id": result.team.session.id,
         "convoy_id": result.convoy.convoy.id,
+        "runtime": taskchad_drill_runtime_summary(result),
         "team": {
             "session": dataclasses.asdict(result.team.session),
             "members": [dataclasses.asdict(member) for member in result.team.members],
         },
         "convoy": {
             "convoy": dataclasses.asdict(result.convoy.convoy),
-            "subtasks": [dataclasses.asdict(subtask) for subtask in result.convoy.subtasks],
+            "subtasks": [
+                _taskchad_safe_subtask_dict(subtask)
+                for subtask in result.convoy.subtasks
+            ],
             "edges": [dataclasses.asdict(edge) for edge in result.convoy.edges],
         },
         "initial_message_count": len(result.initial_messages),

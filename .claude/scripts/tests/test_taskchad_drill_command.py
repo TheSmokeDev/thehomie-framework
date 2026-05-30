@@ -14,6 +14,7 @@ import commands  # noqa: E402
 import config  # noqa: E402
 import core_handlers  # noqa: E402
 from extension_manager import ExtensionManager  # noqa: E402
+from runtime.base import RuntimeResult  # noqa: E402
 
 
 def test_taskchad_drill_command_is_router_registered() -> None:
@@ -53,6 +54,47 @@ def test_taskchad_drill_command_runs_default_bounded_drill(monkeypatch, tmp_path
     assert "Progress: `10/10` subtasks" in reply
     assert "Runtime turns: `off`" in reply
     assert "Final revised TaskChad plan" in reply
+
+
+def test_taskchad_drill_command_runs_runtime_drill_from_async_handler(
+    monkeypatch,
+    tmp_path,
+) -> None:
+    monkeypatch.setattr(config, "ORCHESTRATION_DB_PATH", tmp_path / "taskchad_runtime.db")
+    calls = []
+
+    async def fake_run_with_runtime_lanes(request):
+        calls.append(request)
+        return RuntimeResult(
+            text=f"Runtime command turn {len(calls)}",
+            runtime_lane=request.runtime_lane or "generic_runtime",
+            provider="openai-codex",
+            model="gpt-test",
+            cost_usd=0.0,
+            tool_call_count=0,
+        )
+
+    monkeypatch.setattr(
+        "orchestration.team_loop.run_with_runtime_lanes",
+        fake_run_with_runtime_lanes,
+    )
+
+    reply = asyncio.run(
+        core_handlers.handle_taskchaddrill(
+            adapter=None,
+            incoming=None,
+            args="--runtime --lane generic_runtime",
+        )
+    )
+
+    assert len(calls) == 10
+    assert "Runtime turns: `on`" in reply
+    assert "Runtime lane: `generic_runtime`" in reply
+    assert "Runtime metadata: `10` turns" in reply
+    assert "providers `openai-codex`" in reply
+    assert "models `gpt-test`" in reply
+    assert "tools `0`" in reply
+    assert "Runtime command turn 10" in reply
 
 
 def test_taskchad_drill_rejects_relative_target_url() -> None:
