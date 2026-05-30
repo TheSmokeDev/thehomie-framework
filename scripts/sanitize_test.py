@@ -89,6 +89,7 @@ PAPERCLIP_SEAM_REL = "docs/paperclip-seam.md"
 # explicit INCLUDE_FILES allowlist + on-disk + tracked checks prove the
 # doc actually ships.
 CABINET_VOICE_SETUP_REL = "docs/cabinet-voice-setup.md"
+BROWSEROPS_MANUAL_REL = "docs/browserops-agent-browser-manual.md"
 
 
 def test_cabinet_voice_setup_in_allowlist() -> None:
@@ -142,6 +143,48 @@ def test_cabinet_voice_setup_doc_no_personal_refs() -> None:
     forbidden = ["YourBusiness", "YourBusiness", "owner", "lastname"]
     bad: list[str] = [term for term in forbidden if term in content]
     assert not bad, f"Public docs/cabinet-voice-setup.md contains personal refs: {bad}"
+
+
+def test_browserops_manual_in_allowlist() -> None:
+    """The BrowserOps manual is public-safe framework context.
+
+    It lives under docs/ (DENY_DIRS), so it must be surgically lifted rather
+    than allowing broader private planning docs through.
+    """
+    assert BROWSEROPS_MANUAL_REL in sanitize.INCLUDE_FILES, (
+        f"sanitize.INCLUDE_FILES must include {BROWSEROPS_MANUAL_REL!r} so "
+        f"the public mirror ships the BrowserOps manual. Found "
+        f"INCLUDE_FILES = {sanitize.INCLUDE_FILES}"
+    )
+
+
+def test_browserops_manual_survives_sanitize() -> None:
+    """is_denied() returns False for the public BrowserOps manual."""
+    assert sanitize.is_denied(BROWSEROPS_MANUAL_REL) is False, (
+        f"sanitizer denied {BROWSEROPS_MANUAL_REL!r} — public mirror will "
+        f"be missing the BrowserOps operating manual. Check INCLUDE_FILES + "
+        f"DENY_FILES + DENY_PATTERNS layering."
+    )
+
+
+def test_browserops_manual_doc_no_personal_refs() -> None:
+    """The BrowserOps manual must stay framework-safe."""
+    asset = REPO_ROOT / BROWSEROPS_MANUAL_REL
+    assert asset.is_file(), f"BrowserOps manual missing at {asset}"
+    content = asset.read_text(encoding="utf-8")
+    forbidden = [
+        "YourBusiness",
+        "YourBusiness",
+        "owner",
+        "lastname",
+        "YourAgent",
+        "@YourBot",
+        "C:\\Users\\YourUser",
+        "C:/Users/YourUser",
+        "thehomie",
+    ]
+    bad: list[str] = [term for term in forbidden if term in content]
+    assert not bad, f"Public docs/browserops-agent-browser-manual.md contains private refs: {bad}"
 
 
 def test_prp7_paperclip_seam_doc_included() -> None:
