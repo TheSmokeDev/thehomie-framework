@@ -27,6 +27,20 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 TEMPLATE_REL = ".claude/templates/profile-isolation-smoke.yaml"
 
 
+def _tracked_repo_files() -> frozenset[str]:
+    result = subprocess.run(
+        ["git", "ls-files"],
+        cwd=str(REPO_ROOT),
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    return frozenset(line.strip() for line in result.stdout.splitlines() if line.strip())
+
+
+TRACKED_RELS = _tracked_repo_files()
+
+
 def test_phase5_archon_template_included() -> None:
     """The PRP-7e smoke workflow template must NOT be denied by the
     sanitizer - it has to ship in the public export so consumers of
@@ -94,6 +108,15 @@ MANUAL_DOC_RELS = tuple(
     sorted(
         path.relative_to(REPO_ROOT).as_posix()
         for path in (REPO_ROOT / "docs" / "manual").rglob("*.md")
+        if path.relative_to(REPO_ROOT).as_posix() in TRACKED_RELS
+    )
+)
+MANUAL_FIXTURE_RELS = tuple(
+    sorted(
+        path.relative_to(REPO_ROOT).as_posix()
+        for path in (REPO_ROOT / "docs" / "manual" / "fixtures").glob("*")
+        if path.is_file()
+        and path.relative_to(REPO_ROOT).as_posix() in TRACKED_RELS
     )
 )
 CABINET_VOICE_AVATAR_RELS = tuple(
@@ -237,6 +260,18 @@ def test_manual_docs_survive_sanitize() -> None:
         f"sanitizer denied public manual pages: {denied!r}. Check "
         "INCLUDE_FILES plus DENY_FILES / DENY_EXTENSIONS / DENY_PATTERNS."
     )
+
+
+def test_manual_fixtures_survive_sanitize() -> None:
+    """Public demo fixtures under docs/manual must also be exact-allowlisted."""
+    assert MANUAL_FIXTURE_RELS, "No docs/manual fixture files found"
+    missing = [path for path in MANUAL_FIXTURE_RELS if path not in sanitize.INCLUDE_FILES]
+    assert not missing, (
+        f"docs/manual fixture files missing from sanitize.INCLUDE_FILES: {missing!r}. "
+        "Demo fixtures are public manual artifacts and need exact review."
+    )
+    denied = [path for path in MANUAL_FIXTURE_RELS if sanitize.is_denied(path)]
+    assert not denied, f"sanitizer denied public manual fixtures: {denied!r}"
 
 
 def test_manual_docs_scrub_private_refs() -> None:
@@ -494,17 +529,20 @@ def test_dist_dirs_denied_segment_aware() -> None:
         # canonical top-level
         "dashboard/server/dist/index.js",
         "dashboard/server/dist/middleware/auth.js",
+        "dashboard/desktop/dist/main.js",
+        "dashboard/desktop/out/The Homie.exe",
         "dashboard/web/dist/assets/index-abc123.js",
         "dashboard/web/dist/index.html",
         # nested (e.g. accidentally produced under another root)
         "release/dashboard/server/dist/index.js",
+        "release/dashboard/desktop/out/The Homie.exe",
         "vendor/dashboard/web/dist/main.js",
     ]
     for path in cases:
         assert sanitize.is_denied(path) is True, (
             f"sanitizer FAILED to deny dashboard build artifact {path!r}. "
-            f"Expected catch by: DENY_DIRS 'dashboard/server/dist/' or "
-            f"'dashboard/web/dist/' (segment-aware). Build artifacts "
+            f"Expected catch by: dashboard dist/out DENY_DIRS "
+            f"(segment-aware). Build artifacts "
             f"must never ship — bloat + possible bundled secrets."
         )
 
@@ -519,16 +557,18 @@ def test_node_modules_denied_segment_aware() -> None:
     """
     cases = [
         "dashboard/server/node_modules/hono/package.json",
+        "dashboard/desktop/node_modules/electron/package.json",
         "dashboard/web/node_modules/preact/dist/preact.mjs",
         # nested forms
         "release/dashboard/server/node_modules/hono/index.js",
+        "release/dashboard/desktop/node_modules/electron/index.js",
         "vendor/dashboard/web/node_modules/preact/dist/preact.js",
     ]
     for path in cases:
         assert sanitize.is_denied(path) is True, (
             f"sanitizer FAILED to deny dashboard node_modules path {path!r}. "
-            f"Expected catch by: DENY_DIRS 'dashboard/server/node_modules/' "
-            f"or 'dashboard/web/node_modules/' (segment-aware)."
+            f"Expected catch by dashboard node_modules DENY_DIRS "
+            f"(segment-aware)."
         )
 
 
@@ -662,6 +702,7 @@ def test_dashboard_server_src_files_pass_through_to_public() -> None:
     """
     legitimate_paths = [
         "dashboard/server/src/index.ts",
+        "dashboard/server/src/static-web.ts",
         "dashboard/server/src/translate.ts",
         "dashboard/server/src/auth-policy.ts",
         "dashboard/server/src/framework-client.ts",
@@ -670,6 +711,14 @@ def test_dashboard_server_src_files_pass_through_to_public() -> None:
         "dashboard/server/src/routes/agents.ts",
         "dashboard/server/src/routes/conversation.ts",
         "dashboard/server/package.json",
+        "dashboard/desktop/electron-builder.cjs",
+        "dashboard/desktop/package.json",
+        "dashboard/desktop/main.cjs",
+        "dashboard/desktop/preload.cjs",
+        "dashboard/desktop/lib/desktop-paths.cjs",
+        "dashboard/desktop/lib/process-manager.cjs",
+        "dashboard/desktop/scripts/packaged-smoke.mjs",
+        "dashboard/desktop/renderer/index.html",
         "dashboard/web/src/App.tsx",
         "dashboard/web/src/main.tsx",
         "dashboard/web/src/pages/Agents.tsx",
