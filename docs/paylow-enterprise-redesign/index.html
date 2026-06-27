@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pay Low Insurance Services | Enterprise Redesign Concept</title>
+  <meta name="description" content="A premium Pay Low Insurance Services redesign concept for local insurance, DMV services, bilingual support, and fast quotes.">
+  <link rel="preconnect" href="https://images.unsplash.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@450;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #07111f;
+      --navy: #0b3d78;
+      --blue: #0e63b6;
+      --sky: #eaf4ff;
+      --orange: #ff7a1a;
+      --red: #d3223a;
+      --green: #1e7a4d;
+      --gold: #f5b301;
+      --paper: #f7fafc;
+      --white: #fff;
+      --slate: #5d6b7a;
+      --line: #d9e4ef;
+      --shadow: 0 22px 60px rgba(7, 17, 31, .14);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Inter, Arial, sans-serif; color: var(--ink); background: var(--paper); }
+    a { color: inherit; text-decoration: none; }
+    .topbar { background: var(--ink); color: var(--white); font-size: 13px; }
+    .wrap { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+    .topbar .wrap, .nav .wrap { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+    .topbar .wrap { min-height: 42px; flex-wrap: wrap; }
+    .quick-links { display: flex; gap: 18px; flex-wrap: wrap; color: rgba(255,255,255,.82); }
+    .nav { position: sticky; top: 0; z-index: 20; background: rgba(255,255,255,.94); border-bottom: 1px solid var(--line); backdrop-filter: blur(14px); }
+    .nav .wrap { min-height: 78px; }
+    .brand { display: flex; align-items: center; gap: 12px; min-width: 205px; }
+    .mark { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 8px; background: linear-gradient(135deg, var(--blue), var(--navy)); color: var(--white); font-weight: 800; box-shadow: 0 12px 28px rgba(14,99,182,.24); }
+    .brand-copy strong { display: block; font-size: 22px; line-height: 1; color: var(--navy); letter-spacing: 0; }
+    .brand-copy span { display: block; margin-top: 4px; font-size: 11px; font-weight: 800; color: var(--red); letter-spacing: 0; text-transform: uppercase; }
+    .nav-links { display: flex; align-items: center; gap: 24px; color: #34485e; font-size: 14px; font-weight: 700; }
+    .nav-cta { display: flex; align-items: center; gap: 10px; }
+    .button { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 20px; border-radius: 8px; border: 1px solid transparent; font-weight: 800; font-size: 14px; cursor: pointer; white-space: nowrap; }
+    .button.primary { background: var(--orange); color: var(--white); box-shadow: 0 14px 28px rgba(255,122,26,.28); }
+    .button.secondary { background: var(--white); color: var(--navy); border-color: var(--line); }
+    .hero { overflow: hidden; background: linear-gradient(90deg, rgba(7,17,31,.88), rgba(11,61,120,.82)), url("https://paylowinsurance.com/wp-content/uploads/2025/09/low-cost-cheap-insurance-in-el-cajon-san-diego-california-1.jpg") center/cover; color: var(--white); }
+    .hero .wrap { display: grid; grid-template-columns: minmax(0, 1fr) 430px; gap: 54px; align-items: center; min-height: 720px; padding: 72px 0 48px; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 9px; padding: 8px 11px; border: 1px solid rgba(255,255,255,.22); border-radius: 999px; color: rgba(255,255,255,.88); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0; background: rgba(255,255,255,.08); }
+    .hero h1 { max-width: 760px; margin: 22px 0 22px; font-size: clamp(45px, 7vw, 78px); line-height: .96; letter-spacing: 0; }
+    .hero h1 span { color: var(--orange); }
+    .hero p { max-width: 650px; margin: 0; color: rgba(255,255,255,.83); font-size: clamp(18px, 2.4vw, 23px); line-height: 1.45; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 30px 0; }
+    .proof-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; max-width: 720px; }
+    .proof { padding: 17px; border: 1px solid rgba(255,255,255,.18); border-radius: 8px; background: rgba(255,255,255,.08); }
+    .proof strong { display: block; font-size: 25px; line-height: 1; }
+    .proof span { display: block; margin-top: 7px; color: rgba(255,255,255,.76); font-size: 13px; line-height: 1.35; }
+    .quote-panel { background: var(--white); color: var(--ink); border-radius: 12px; box-shadow: var(--shadow); overflow: hidden; }
+    .quote-head { padding: 24px; background: linear-gradient(135deg, var(--blue), var(--navy)); color: var(--white); }
+    .quote-head strong { display: block; font-size: 24px; line-height: 1.12; }
+    .quote-head span { display: block; margin-top: 8px; color: rgba(255,255,255,.78); font-size: 14px; }
+    .form { padding: 24px; display: grid; gap: 14px; }
+    label { display: grid; gap: 7px; font-size: 12px; font-weight: 800; color: #34485e; text-transform: uppercase; letter-spacing: 0; }
+    input, select { width: 100%; height: 50px; border: 1px solid var(--line); border-radius: 8px; padding: 0 13px; color: var(--ink); font: inherit; background: var(--white); }
+    .form-note { color: var(--slate); font-size: 12px; line-height: 1.5; }
+    .quote-success { display: none; padding: 24px; background: #f7fbff; }
+    .quote-success.active { display: grid; gap: 16px; }
+    .form.is-submitted { display: none; }
+    .success-icon { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 999px; background: var(--green); color: var(--white); font-weight: 900; font-size: 24px; }
+    .quote-success h3 { margin: 0; font-size: 26px; line-height: 1.1; }
+    .quote-success p { margin: 0; color: var(--slate); line-height: 1.55; font-size: 14px; }
+    .packet { display: grid; gap: 9px; padding: 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--white); font-size: 13px; }
+    .packet div { display: flex; justify-content: space-between; gap: 14px; border-bottom: 1px solid #eef3f8; padding-bottom: 8px; }
+    .packet div:last-child { border-bottom: 0; padding-bottom: 0; }
+    .packet b { color: #34485e; }
+    .service-strip { background: var(--white); border-bottom: 1px solid var(--line); }
+    .service-strip .wrap { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); }
+    .service-chip { min-height: 126px; padding: 26px 20px; background: var(--white); }
+    .service-chip b { display: block; margin-bottom: 8px; font-size: 17px; }
+    .service-chip span { color: var(--slate); font-size: 14px; line-height: 1.45; }
+    section { padding: 82px 0; }
+    .section-head { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 30px; }
+    h2 { margin: 0; font-size: clamp(32px, 4vw, 46px); line-height: 1.08; letter-spacing: 0; }
+    .section-head p { max-width: 440px; margin: 0; color: var(--slate); line-height: 1.65; }
+    .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+    .card { background: var(--white); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; box-shadow: 0 16px 36px rgba(7,17,31,.06); }
+    .card img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
+    .card-body { padding: 22px; }
+    .card h3 { margin: 0 0 9px; font-size: 20px; }
+    .card p { margin: 0; color: var(--slate); line-height: 1.58; font-size: 14px; }
+    .service-groups { display: grid; gap: 18px; margin-top: 18px; }
+    .service-group { display: grid; grid-template-columns: 260px 1fr; gap: 18px; align-items: stretch; padding: 20px; border: 1px solid var(--line); border-radius: 8px; background: var(--white); box-shadow: 0 16px 36px rgba(7,17,31,.05); }
+    .service-group h3 { margin: 0 0 9px; font-size: 22px; }
+    .service-group p { margin: 0; color: var(--slate); line-height: 1.55; font-size: 14px; }
+    .service-tags { display: flex; flex-wrap: wrap; gap: 9px; align-content: start; }
+    .service-tags a, .service-tags span { display: inline-flex; min-height: 34px; align-items: center; border: 1px solid var(--line); border-radius: 999px; padding: 0 12px; color: #34485e; background: #f7fbff; font-size: 13px; font-weight: 750; }
+    .dmv-band { background: #fff; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .dmv-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    .dmv-item { min-height: 142px; padding: 18px; border: 1px solid var(--line); border-radius: 8px; background: #f7fbff; }
+    .dmv-item b { display: block; margin-bottom: 8px; color: var(--navy); }
+    .dmv-item span { color: var(--slate); font-size: 13px; line-height: 1.5; }
+    .locations { background: var(--ink); color: var(--white); }
+    .locations .section-head p { color: rgba(255,255,255,.72); }
+    .location-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .location { padding: 24px; border: 1px solid rgba(255,255,255,.14); border-radius: 8px; background: rgba(255,255,255,.08); }
+    .location b { display: block; font-size: 20px; margin-bottom: 12px; }
+    .location span { display: block; color: rgba(255,255,255,.72); line-height: 1.55; }
+    .location-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+    .location-actions a { min-height: 38px; padding: 0 12px; font-size: 12px; }
+    .operations { background: var(--white); }
+    .ops-panel { display: grid; grid-template-columns: .95fr 1.05fr; gap: 34px; align-items: center; padding: 38px; border: 1px solid var(--line); border-radius: 12px; background: linear-gradient(135deg, #f7fbff, #fff); box-shadow: var(--shadow); }
+    .ops-panel img { width: 100%; border-radius: 8px; aspect-ratio: 5 / 4; object-fit: cover; }
+    .ops-list { display: grid; gap: 12px; margin-top: 24px; }
+    .ops-item { display: flex; gap: 12px; padding: 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--white); }
+    .check { flex: 0 0 28px; width: 28px; height: 28px; border-radius: 999px; display: grid; place-items: center; background: var(--green); color: var(--white); font-weight: 800; }
+    .testimonials { display: grid; grid-template-columns: 1.1fr .9fr; gap: 20px; align-items: stretch; }
+    .review-card, .score-card { border-radius: 8px; background: var(--white); border: 1px solid var(--line); padding: 30px; }
+    .stars { color: var(--gold); font-size: 24px; letter-spacing: 0; }
+    .review-card p { font-size: 24px; line-height: 1.38; margin: 20px 0; }
+    .score-card { display: grid; align-content: center; gap: 18px; background: var(--navy); color: var(--white); }
+    .score-card strong { font-size: 58px; line-height: 1; }
+    .final-cta { padding: 72px 0; background: linear-gradient(135deg, var(--blue), var(--navy)); color: var(--white); text-align: center; }
+    .final-cta p { width: min(720px, 100%); margin: 16px auto 28px; color: rgba(255,255,255,.78); font-size: 18px; line-height: 1.55; }
+    footer { background: var(--ink); color: rgba(255,255,255,.72); padding: 34px 0; font-size: 14px; }
+    footer .wrap { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+    @media (max-width: 980px) {
+      .nav-links { display: none; }
+      .hero .wrap, .ops-panel, .testimonials { grid-template-columns: 1fr; }
+      .hero .wrap { min-height: auto; }
+      .quote-panel { max-width: 520px; }
+      .cards { grid-template-columns: repeat(2, 1fr); }
+      .service-strip .wrap, .location-grid, .service-group, .dmv-grid { grid-template-columns: 1fr; }
+      .section-head { display: block; }
+      .section-head p { margin-top: 14px; }
+    }
+    @media (max-width: 620px) {
+      .wrap { width: min(100% - 26px, 1180px); }
+      .topbar { display: none; }
+      .nav .wrap { min-height: 68px; }
+      .brand strong { font-size: 19px; }
+      .nav-cta .secondary { display: none; }
+      .button { width: 100%; }
+      .nav-cta .button { width: auto; min-height: 42px; padding: 0 14px; }
+      .hero .wrap { padding: 46px 0 36px; gap: 32px; }
+      .proof-row, .cards { grid-template-columns: 1fr; }
+      section { padding: 56px 0; }
+      .ops-panel { padding: 20px; }
+      .review-card p { font-size: 20px; }
+      .score-card strong { font-size: 46px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar"><div class="wrap"><div>Serving El Cajon, Vista, and San Diego County</div><div class="quick-links"><a href="tel:6197361313">619-736-1313</a><a href="mailto:service@paylowinsurance.com">service@paylowinsurance.com</a><a href="#">Espanol</a></div></div></div>
+  <header class="nav"><div class="wrap"><a class="brand" href="#"><span class="mark">PL</span><span class="brand-copy"><strong>Pay Low</strong><span>Insurance Services</span></span></a><nav class="nav-links" aria-label="Main navigation"><a href="#services">Insurance</a><a href="#dmv">DMV Services</a><a href="#locations">Locations</a><a href="#reviews">Reviews</a></nav><div class="nav-cta"><a class="button secondary" href="tel:6197361313">Call</a><a class="button primary" href="#quote">Get a Quote</a></div></div></header>
+  <main>
+    <section class="hero"><div class="wrap"><div><div class="eyebrow">Local agency. Faster quotes. DMV help.</div><h1>Affordable insurance that feels <span>easy</span> again.</h1><p>Pay Low helps California drivers, families, and small businesses compare coverage, handle DMV services, and get bilingual local support from real people.</p><div class="hero-actions"><a class="button primary" href="#quote">Start My Quote</a><a class="button secondary" href="#locations">Find a Location</a></div><div class="proof-row"><div class="proof"><strong>2,000+</strong><span>review signal surfaced on the current Pay Low site</span></div><div class="proof"><strong>3</strong><span>local offices across El Cajon and Vista</span></div><div class="proof"><strong>EN/ES</strong><span>bilingual insurance and service support</span></div></div></div>
+      <aside class="quote-panel" id="quote" aria-label="Quote request form"><div class="quote-head"><strong>Compare your options today</strong><span>Auto, home, life, business, and DMV service requests.</span></div><form class="form" id="quoteForm"><label>Full name<input id="quoteName" autocomplete="name" placeholder="Maria Garcia" required></label><label>ZIP code<input id="quoteZip" inputmode="numeric" autocomplete="postal-code" placeholder="92020" required></label><label>What do you need?<select id="quoteNeed"><option>Auto insurance</option><option>SR-22 filing</option><option>Motorcycle insurance</option><option>Mexico auto insurance</option><option>Home insurance</option><option>Renters insurance</option><option>DMV services</option><option>Business insurance</option></select></label><label>Preferred language<select id="quoteLanguage"><option>English</option><option>Spanish</option></select></label><label>Phone number<input id="quotePhone" inputmode="tel" autocomplete="tel" placeholder="(619) 555-0131" required></label><button class="button primary" type="submit">Request My Quote</button><div class="form-note">Demo intake uses the same QuoteMoto-style handoff logic: capture intent, urgency, language, contact, then show the staff packet instead of dropping into a dead form.</div></form><div class="quote-success" id="quoteSuccess" tabindex="-1" aria-live="polite"><div class="success-icon">OK</div><h3>Thank you. Your request is ready for follow-up.</h3><p>This is the screen Pay Low should show after quote intake: clear confirmation for the customer and a structured packet for staff or TaskChad.</p><div class="packet" id="quotePacket"></div><button class="button secondary" type="button" id="resetQuote">Start another request</button></div></aside></div></section>
+    <div class="service-strip" aria-label="Core service promises"><div class="wrap"><div class="service-chip"><b>Auto + SR-22</b><span>Liability, full coverage, high-risk support, SR-22, motorcycle, RV, boat, ATV, classic, and Mexico auto.</span></div><div class="service-chip"><b>Home + Property</b><span>Homeowners, renters, condo, landlord, flood, and earthquake coverage paths.</span></div><div class="service-chip"><b>DMV Services</b><span>Registration, renewals, titles, plates, placards, PNO, verification, and release of liability.</span></div><div class="service-chip"><b>Business Coverage</b><span>Commercial auto and rideshare paths for local drivers and small business owners.</span></div></div></div>
+    <section id="services"><div class="wrap"><div class="section-head"><h2>Everything Pay Low sells, organized like a buyer actually thinks.</h2><p>Firecrawl and the sitemap show a broad service surface. The redesign turns that into clean families with real quote paths instead of burying the offer across dozens of pages.</p></div><div class="cards"><article class="card"><img alt="Pay Low auto insurance service" src="https://paylowinsurance.com/wp-content/uploads/2025/09/low-cost-auto-insurance-in-san-diego-el-cajon.jpg"><div class="card-body"><h3>Auto Insurance</h3><p>Fast intake for liability, full coverage, new policies, rewrites, SR-22, and same-day proof needs.</p></div></article><article class="card"><img alt="Pay Low home insurance service" src="https://paylowinsurance.com/wp-content/uploads/2025/09/low-cost-home-insurance-in-san-diego-el-cajon.jpg"><div class="card-body"><h3>Home + Property</h3><p>Homeowners, renters, condo, landlord, flood, and earthquake paths grouped in one clean section.</p></div></article><article class="card"><img alt="Pay Low life insurance service" src="https://paylowinsurance.com/wp-content/uploads/2025/09/low-cost-life-insurance-in-san-diego-el-cajon.jpg"><div class="card-body"><h3>Life Insurance</h3><p>Term life, whole life, universal life, final expense, and disability conversations without pressure.</p></div></article><article class="card"><img alt="Pay Low DMV services" src="https://paylowinsurance.com/wp-content/uploads/2025/09/low-cost-dmv-services-in-san-diego-el-cajon.jpg"><div class="card-body"><h3>DMV Services</h3><p>Paperwork demand becomes a lead source, not a buried side service.</p></div></article></div><div class="service-groups" aria-label="Detailed service groups"><div class="service-group"><div><h3>Vehicle Insurance</h3><p>These are the high-intent quote pages that should all route into one follow-up engine.</p></div><div class="service-tags"><a href="#quote">Auto</a><a href="#quote">SR-22</a><a href="#quote">Motorcycle</a><a href="#quote">RV / Motorhome</a><a href="#quote">Boat / Watercraft</a><a href="#quote">ATV / Off-road</a><a href="#quote">Classic Car</a><a href="#quote">Mexico Auto</a><a href="#quote">Commercial Auto</a><a href="#quote">Rideshare</a></div></div><div class="service-group"><div><h3>Property + Life</h3><p>Useful cross-sell families for customers who already trust Pay Low with their car policy.</p></div><div class="service-tags"><a href="#quote">Homeowners</a><a href="#quote">Renters</a><a href="#quote">Condo</a><a href="#quote">Landlord</a><a href="#quote">Flood</a><a href="#quote">Earthquake</a><a href="#quote">Term Life</a><a href="#quote">Whole Life</a><a href="#quote">Universal Life</a><a href="#quote">Final Expense</a><a href="#quote">Disability</a></div></div></div></div></section>
+    <section class="dmv-band" id="dmv"><div class="wrap"><div class="section-head"><h2>DMV services deserve their own conversion lane.</h2><p>Pay Low already has a deep DMV menu. This section makes it obvious, clickable, and perfect for TaskChad triage.</p></div><div class="dmv-grid"><div class="dmv-item"><b>Vehicle Registration</b><span>Start or update California registration with staff help.</span></div><div class="dmv-item"><b>Registration Renewal</b><span>Renew tags without making the customer decode DMV paperwork alone.</span></div><div class="dmv-item"><b>Out-of-State Registration</b><span>Help new California drivers move vehicles into the state system.</span></div><div class="dmv-item"><b>Title Transfers</b><span>Buyer, seller, and family transfer paperwork routed to a service desk.</span></div><div class="dmv-item"><b>Duplicate Title</b><span>Recover lost title problems before they stall a sale or registration.</span></div><div class="dmv-item"><b>License Plate Tags</b><span>Tag questions are urgent, local, and perfect for callback automation.</span></div><div class="dmv-item"><b>Replacement Plates</b><span>Route missing, damaged, or replacement plate requests cleanly.</span></div><div class="dmv-item"><b>Disabled Placards</b><span>Support disabled placard paperwork with a clear intake path.</span></div><div class="dmv-item"><b>Vehicle Verification</b><span>Capture verification requests and send the right document checklist.</span></div><div class="dmv-item"><b>PNO Filing</b><span>Planned non-operation filings are repetitive and easy to triage.</span></div><div class="dmv-item"><b>Release of Liability</b><span>Help sellers protect themselves after a vehicle sale.</span></div><div class="dmv-item"><b>Insurance + DMV Combo</b><span>The killer path: SR-22, registration, title, and proof handled together.</span></div></div></div></section>
+    <section class="locations" id="locations"><div class="wrap"><div class="section-head"><h2>Built around their real local footprint.</h2><p>A stronger website should make the offices obvious, clickable, and conversion-ready instead of burying them in tiny header text.</p></div><div class="location-grid"><div class="location"><b>El Cajon Fletcher</b><span>415 Fletcher Pkwy STE 306<br>El Cajon, CA 92020</span><div class="location-actions"><a class="button secondary" href="tel:6197361313">Call</a><a class="button primary" href="#quote">Quote</a></div></div><div class="location"><b>Parkway Plaza</b><span>595 Pkwy Plaza<br>El Cajon, CA 92020</span><div class="location-actions"><a class="button secondary" href="tel:6197361313">Call</a><a class="button primary" href="#quote">Quote</a></div></div><div class="location"><b>Vista Office</b><span>1990 S Santa Fe Ave<br>Vista, CA 92083</span><div class="location-actions"><a class="button secondary" href="tel:6197361313">Call</a><a class="button primary" href="#quote">Quote</a></div></div></div></div></section>
+    <section class="operations"><div class="wrap"><div class="ops-panel"><img alt="Pay Low office and customer service" src="https://paylowinsurance.com/wp-content/uploads/2025/09/how-to-find-us-pay-low-insurance-low-cost-insurance-in-san-diego.jpg"><div><div class="eyebrow" style="background:#eaf4ff;color:#0b3d78;border-color:#d9e4ef;">TaskChad angle</div><h2 style="margin-top:18px;">The website becomes the front desk, not just a flyer.</h2><p style="color:var(--slate);line-height:1.65;">This is where you sell the real upgrade: modern site, quote routing, missed-call capture, bilingual follow-up, and DMV/service lead intake.</p><div class="ops-list"><div class="ops-item"><span class="check">OK</span><span><b>Instant lead routing</b><br>Auto, DMV, home, and business requests go to the right follow-up path.</span></div><div class="ops-item"><span class="check">OK</span><span><b>After-hours capture</b><br>Customers can start the process even when the office is closed.</span></div><div class="ops-item"><span class="check">OK</span><span><b>Spanish-first support</b><br>EN/ES paths are treated as core conversion flows, not a tiny link.</span></div></div></div></div></div></section>
+    <section id="reviews"><div class="wrap"><div class="testimonials"><div class="review-card"><div class="stars">5 stars</div><p>"The sales pitch is simple: your reputation is stronger than your website. Let the site finally look like the agency people already trust."</p><strong>Positioning for Pay Low owner meeting</strong></div><div class="score-card"><span>Current opportunity</span><strong>High</strong><span>The brand has locations, reviews, phone demand, bilingual service, and DMV demand. The website is the weak link. That's exactly what TaskChad fixes.</span></div></div></div></section>
+    <section class="final-cta"><div class="wrap"><h2>Pay Low does not need a prettier brochure. They need a lead machine.</h2><p>This redesign gives you the visual proof for the pitch: keep their brand, keep their local trust, but upgrade the site into a quote and service-intake engine.</p><a class="button primary" href="#quote">Show the New Quote Flow</a></div></section>
+  </main>
+  <footer><div class="wrap"><span>Pay Low Insurance Services redesign concept for TaskChad outreach.</span><span>Built from DESIGN.md tokens, Firecrawl scrape, sitemap, and live click QA.</span></div></footer>
+  <script>
+    const quoteForm = document.querySelector("#quoteForm");
+    const quoteSuccess = document.querySelector("#quoteSuccess");
+    const quotePacket = document.querySelector("#quotePacket");
+    const resetQuote = document.querySelector("#resetQuote");
+    function nearestOffice(zip) { if (String(zip).startsWith("9208")) return "Vista Office"; return "El Cajon Fletcher or Parkway Plaza"; }
+    function escapeHtml(value) { return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;"); }
+    quoteForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const name = escapeHtml(document.querySelector("#quoteName").value.trim() || "Customer");
+      const zip = escapeHtml(document.querySelector("#quoteZip").value.trim() || "Not provided");
+      const need = escapeHtml(document.querySelector("#quoteNeed").value);
+      const language = escapeHtml(document.querySelector("#quoteLanguage").value);
+      const phone = escapeHtml(document.querySelector("#quotePhone").value.trim() || "Not provided");
+      const urgency = need.includes("SR-22") || need.includes("DMV") ? "Priority callback" : "Standard quote follow-up";
+      const office = nearestOffice(zip);
+      quotePacket.innerHTML = `<div><b>Customer</b><span>${name}</span></div><div><b>Phone</b><span>${phone}</span></div><div><b>Need</b><span>${need}</span></div><div><b>ZIP / Office</b><span>${zip} / ${office}</span></div><div><b>Language</b><span>${language}</span></div><div><b>Route</b><span>${urgency}</span></div>`;
+      quoteForm.classList.add("is-submitted");
+      quoteSuccess.classList.add("active");
+      quoteSuccess.focus({ preventScroll: true });
+    });
+    resetQuote.addEventListener("click", () => { quoteForm.reset(); quoteForm.classList.remove("is-submitted"); quoteSuccess.classList.remove("active"); document.querySelector("#quoteName").focus(); });
+  </script>
+</body>
+</html>
